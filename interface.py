@@ -1,12 +1,15 @@
 #!/usr/bin/python3
 
 from pyzabbix import ZabbixAPI
+import csv
+import os
+import getpass
+import sys
+
 
 zapi = ZabbixAPI("http://127.0.0.1/zabbix")
 zapi.login("Admin", "zabbix")
 print("Connected to Zabbix API Version %s" % zapi.api_version())
-
-import sys
 
 arg = sys.argv[1]
 

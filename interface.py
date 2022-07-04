@@ -4,14 +4,17 @@ from pyzabbix import ZabbixAPI
 import csv
 import os
 import getpass
-import sys
 
 
 zapi = ZabbixAPI("http://127.0.0.1/zabbix")
 zapi.login("Admin", "zabbix")
 print("Connected to Zabbix API Version %s" % zapi.api_version())
 
+import sys
+
 arg = sys.argv[1]
+#input_file = open("test.txt". "r")
+#arg = str(input_file.readline())
 
 hosts = zapi.host.get(filter={"host": arg})
 
@@ -22,9 +25,10 @@ print("Found host id {0}".format(host_id))
 
 try:
 
-    interface = zapi.hostinterface.get(hostids=host_id,output="extend",filter={"main":"1"})
+    interface = zapi.hostinterface.get(hostids=host_id,output="extend",filter={"main":"1","type":"2"})
     interface_id = interface[0]["interfaceid"]
-    items = zapi.item.get(hostids=host_id,output=["itemid","type"])
+    items = zapi.item.get(hostids=host_id,output=["itemid","type"],filter={"type":"20"})
+    lldrules = zapi.discoveryrule.get(hostids=host_id,output=["itemid","type"],filter={"type":"20"})
 
     for item in items:
           item_id = item["itemid"]
@@ -32,8 +36,14 @@ try:
           if (type == "20"):
                   updateitem = zapi.item.update(itemid=item_id,interfaceid=interface_id)
                   print ('Interface updated for ' + str(updateitem))
+    for lldrule in lldrules:
+          lld_id = lldrule["itemid"]
+          lldrule_type = lldrule["type"]
+          if (type == "20"):
+                  updatelld = zapi.discoveryrule.update(itemid=lld_id,interfaceid=interface_id)
+                  print ('Interface updated for ' + str(updatelld))
           else:
-                  print('Not an SNMP item' + str(item_id))
+                  print('Not an SNMP item' + str(lld_id))
 
 except Exception as error:
 

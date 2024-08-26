@@ -4,7 +4,7 @@ from wonderwords import RandomWord
 # Zabbix server details
 zabbix_url = "https://student-XX-zbxtr-YYYY.zabbix.training"
 api = ZabbixAPI(url=zabbix_url)
-api.login(token="6c036300dbe95314dda25b408e3ade3b8042419f434700ab562f9540ff8f64f4")
+api.login(token="your-API-token")
 # Initialize random word generator
 rw = RandomWord()
 def create_host(host_name):
